@@ -24,14 +24,18 @@ app.get('/', (req, res) => {
   res.render('home');
 });
 
-app.get('/createcourse', async (req, res) => {
-  const course = new Course({
-    title: 'VGC',
-    description: 'close by',
-  });
-  await course.save();
-  res.send(course);
+app.get('/courses', async (req, res) => {
+  const courses = await Course.find({});
+  res.render('courses/index', { courses });
 });
+// app.get('/createcourse', async (req, res) => {
+//   const course = new Course({
+//     title: 'VGC',
+//     description: 'close by',
+//   });
+//   await course.save();
+//   res.send(course);
+// });
 
 app.listen(3000, () => {
   console.log('Live on port 3000');
