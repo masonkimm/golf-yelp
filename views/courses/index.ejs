@@ -7,10 +7,11 @@
     <title>Courses</title>
   </head>
   <body>
+    <button><a href="/courses/new">Add new Course</a></button>
     <h1>all courses</h1>
     <ul>
       <% for (let course of courses) {%>
-      <li><%= course.title %></li>
+      <li><a href="/courses/<%= course._id%>"> <%= course.title %></a></li>
       <% }%>
     </ul>
   </body>

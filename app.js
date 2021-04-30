@@ -18,6 +18,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.urlencoded({ exteded: true }));
 
 app.get('/', (req, res) => {
   // res.send('Hello Golf World');
@@ -28,13 +29,26 @@ app.get('/courses', async (req, res) => {
   const courses = await Course.find({});
   res.render('courses/index', { courses });
 });
+app.get('/courses/new', (req, res) => {
+  res.render('courses/new');
+});
+app.post('/courses', async (req, res) => {
+  const course = new Course(req.body.course);
+  await course.save();
+  res.redirect(`/courses/${course._id}`);
+});
+
+app.get('/courses/:id', async (req, res) => {
+  const course = await Course.findById(req.params.id);
+  res.render('courses/show', { course });
+});
 // app.get('/createcourse', async (req, res) => {
 //   const course = new Course({
 //     title: 'VGC',
 //     description: 'close by',
 //   });
 //   await course.save();
-//   res.send(course);
+// res.send(course);
 // });
 
 app.listen(3000, () => {
