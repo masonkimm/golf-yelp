@@ -3,6 +3,9 @@
 <h1>show page</h1>
 <h2><%=course.title %></h2>
 <h3><%=course.location %></h3>
+<img src="<%=course.image %>" alt="" class="figure-img img-fluid rounded" />
+<p><%=course.description%></p>
+<p>$ <%=course.price%></p>
 <footer>
   <button><a href="/courses/<%= course._id %>/edit">Edit</a></button>
 

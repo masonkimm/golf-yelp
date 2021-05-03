@@ -1,6 +1,6 @@
 <% layout('./layouts/boilerplate') %>
-<button><a href="/courses/new">Add new Course</a></button>
-<h1>all courses</h1>
+<!-- <button><a href="/courses/new">Add new Course</a></button> -->
+<h1>Main Page</h1>
 <ul>
   <% for (let course of courses) {%>
   <li><a href="/courses/<%= course._id%>"> <%= course.title %></a></li>
