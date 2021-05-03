@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Courses</title>
-  </head>
-  <body>
-    <button><a href="/courses/new">Add new Course</a></button>
-    <h1>all courses</h1>
-    <ul>
-      <% for (let course of courses) {%>
-      <li><a href="/courses/<%= course._id%>"> <%= course.title %></a></li>
-      <% }%>
-    </ul>
-  </body>
-</html>
+<% layout('./layouts/boilerplate') %>
+<button><a href="/courses/new">Add new Course</a></button>
+<h1>all courses</h1>
+<ul>
+  <% for (let course of courses) {%>
+  <li><a href="/courses/<%= course._id%>"> <%= course.title %></a></li>
+  <% }%>
+</ul>
