@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const Course = require('./models/course');
+const methodOverride = require('method-override');
 
 mongoose.connect('mongodb://localhost:27017/golf-yelp', {
   useNewUrlParser: true,
@@ -19,6 +20,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ exteded: true }));
+app.use(methodOverride('_method'));
 
 app.get('/', (req, res) => {
   // res.send('Hello Golf World');
@@ -41,6 +43,18 @@ app.post('/courses', async (req, res) => {
 app.get('/courses/:id', async (req, res) => {
   const course = await Course.findById(req.params.id);
   res.render('courses/show', { course });
+});
+
+app.get('/courses/:id/edit', async (req, res) => {
+  const course = await Course.findById(req.params.id);
+  res.render('courses/edit', { course });
+});
+app.put('/courses/:id', async (req, res) => {
+  // res.send('worked');
+  const { id } = req.params;
+  // Course.findByIdAndUpdate(id, {title: 'ddd', location:'eeeee'})
+  const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
+  res.redirect(`/courses/${course._id}`);
 });
 // app.get('/createcourse', async (req, res) => {
 //   const course = new Course({
