@@ -12,6 +12,11 @@
     <h3><%=course.location %></h3>
     <footer>
       <button><a href="/courses/<%= course._id %>/edit">Edit</a></button>
+
+      <form action="/courses/<%= course._id %>?_method=DELETE" method="POST">
+        <button>Remove</button>
+      </form>
+
       <button><a href="/courses">All Courses</a></button>
     </footer>
   </body>

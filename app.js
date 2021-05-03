@@ -53,9 +53,16 @@ app.put('/courses/:id', async (req, res) => {
   // res.send('worked');
   const { id } = req.params;
   // Course.findByIdAndUpdate(id, {title: 'ddd', location:'eeeee'})
-  const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
+  const course = await Course.useFindAndModify(id, { ...req.body.course });
   res.redirect(`/courses/${course._id}`);
 });
+
+app.delete('/courses/:id', async (req, res) => {
+  const { id } = req.params;
+  const course = await Course.findByIdAndDelete(id);
+  res.redirect('/courses');
+});
+
 // app.get('/createcourse', async (req, res) => {
 //   const course = new Course({
 //     title: 'VGC',
