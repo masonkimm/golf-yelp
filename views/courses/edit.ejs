@@ -1,5 +1,76 @@
-<% layout('./layouts/boilerplate') %>
+<% layout('./layouts/boilerplate')%>
 
+<div class="row mt-5">
+  <h1 class="text-center">Edit course</h1>
+  <div class="col-6 offset-3">
+    <form action="/courses/<%=course._id%>?_method=PUT" method="POST">
+      <div class="mb-3">
+        <label class="form-label" for="title">Title </label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="course[title]"
+          value="<%= course.title%>"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location">Location </label>
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="course[location]"
+          value="<%= course.location%>"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="image">Image</label>
+        <input
+          class="form-control"
+          type="text"
+          id="image"
+          name="course[image]"
+          value="<%= course.image%>"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price">Price</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="price-label">$</span>
+          <input
+            type="text"
+            class="form-control"
+            type="text"
+            id="price"
+            name="course[price]"
+            value="<%= course.price%>"
+            aria-label="price"
+            aria-describedby="price-label"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="course[description]"
+          rows="3"
+        >
+<%=course.description%></textarea
+        >
+      </div>
+
+      <div class="text-end">
+        <button class="btn btn-info">Update Course</button>
+        <a class="btn btn-danger" href="/courses">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- 
 <h1>Edit Course</h1>
 <h2>Form Here</h2>
 <form action="/courses/<%=course._id%>?_method=PUT" method="POST">
@@ -23,4 +94,4 @@
   </div>
   <button>Update</button>
   <button><a href="/courses/<%= course._id%>">Cancel</a></button>
-</form>
+</form> -->

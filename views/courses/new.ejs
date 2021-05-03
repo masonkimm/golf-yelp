@@ -1,15 +1,71 @@
 <% layout('./layouts/boilerplate')%>
-<h1>New Page</h1>
-<h2>Form Here</h2>
-<form action="/courses" method="POST">
-  <div class="">
-    <label for="">Title </label>
-    <input type="text" id="title" name="course[title]" />
+
+<div class="row mt-5">
+  <h1 class="text-center">Post new course</h1>
+  <div class="col-6 offset-3">
+    <form action="/courses" method="POST">
+      <div class="mb-3">
+        <label class="form-label" for="title">Title </label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="course[title]"
+          placeholder="Pebble Beach"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location">Location </label>
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="course[location]"
+          placeholder="Monterey County, California"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="image">Image</label>
+        <input
+          class="form-control"
+          type="text"
+          id="image"
+          name="course[image]"
+          placeholder="URL"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price">Price</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="price-label">$</span>
+          <input
+            type="text"
+            class="form-control"
+            type="text"
+            id="price"
+            name="course[price]"
+            placeholder="100.00"
+            aria-label="price"
+            aria-describedby="price-label"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="course[description]"
+          rows="3"
+          placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe obcaecati cupiditate delectus adipisci assumenda sapiente dolorum enim rem deserunt odio! Neque id error quisquam soluta tempora! Vero nesciunt neque fuga."
+        ></textarea>
+      </div>
+
+      <div class="text-end">
+        <button class="btn btn-info">Add Course</button>
+        <a class="btn btn-danger" href="/courses">Cancel</a>
+      </div>
+    </form>
   </div>
-  <div class="">
-    <label for="">Location </label>
-    <input type="text" id="location" name="course[location]" />
-  </div>
-  <button>Add Course</button>
-  <button><a href="/courses">Cancel</a></button>
-</form>
+</div>
