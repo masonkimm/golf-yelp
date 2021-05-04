@@ -37,10 +37,14 @@ app.get('/courses', async (req, res) => {
 app.get('/courses/new', (req, res) => {
   res.render('courses/new');
 });
-app.post('/courses', async (req, res) => {
-  const course = new Course(req.body.course);
-  await course.save();
-  res.redirect(`/courses/${course._id}`);
+app.post('/courses', async (req, res, next) => {
+  try {
+    const course = new Course(req.body.course);
+    await course.save();
+    res.redirect(`/courses/${course._id}`);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/courses/:id', async (req, res) => {
@@ -64,6 +68,10 @@ app.delete('/courses/:id', async (req, res) => {
   const { id } = req.params;
   const course = await Course.findByIdAndDelete(id);
   res.redirect('/courses');
+});
+
+app.use((err, req, res, next) => {
+  res.send('Error');
 });
 
 // app.get('/createcourse', async (req, res) => {
