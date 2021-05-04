@@ -1,9 +1,9 @@
 <% layout('./layouts/boilerplate')%>
 
-<div class="row mt-5">
+<div class="row my-5">
   <h1 class="text-center">Post new course</h1>
   <div class="col-6 offset-3">
-    <form action="/courses" method="POST">
+    <form action="/courses" method="POST" class="validated-form" novalidate>
       <div class="mb-3">
         <label class="form-label" for="title">Title </label>
         <input
@@ -12,7 +12,9 @@
           id="title"
           name="course[title]"
           placeholder="Pebble Beach"
+          required
         />
+        <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location </label>
@@ -22,7 +24,9 @@
           id="location"
           name="course[location]"
           placeholder="Monterey County, California"
+          required
         />
+        <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="image">Image</label>
@@ -32,7 +36,9 @@
           id="image"
           name="course[image]"
           placeholder="URL"
+          required
         />
+        <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">Price</label>
@@ -47,7 +53,9 @@
             placeholder="100.00"
             aria-label="price"
             aria-describedby="price-label"
+            required
           />
+          <div class="invalid-feedback text-end">Please fill in the blank</div>
         </div>
       </div>
       <div class="mb-3">
@@ -58,8 +66,10 @@
           id="description"
           name="course[description]"
           rows="3"
-          placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe obcaecati cupiditate delectus adipisci assumenda sapiente dolorum enim rem deserunt odio! Neque id error quisquam soluta tempora! Vero nesciunt neque fuga."
+          placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elite..."
+          required
         ></textarea>
+        <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
 
       <div class="text-end">
