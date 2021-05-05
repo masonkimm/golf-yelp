@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const Course = require('./models/course');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const CatchAsync = require('./utils/CatchAsync');
+const ExpressError = require('./utils/ExpressError');
 
 mongoose.connect('mongodb://localhost:27017/golf-yelp', {
   useNewUrlParser: true,
@@ -30,50 +32,75 @@ app.get('/', (req, res) => {
   res.render('home');
 });
 
-app.get('/courses', async (req, res) => {
-  const courses = await Course.find({});
-  res.render('courses/index', { courses });
-});
+app.get(
+  '/courses',
+  CatchAsync(async (req, res) => {
+    const courses = await Course.find({});
+    res.render('courses/index', { courses });
+  })
+);
 app.get('/courses/new', (req, res) => {
   res.render('courses/new');
 });
-app.post('/courses', async (req, res, next) => {
-  try {
+app.post(
+  '/courses',
+  CatchAsync(async (req, res, next) => {
+    if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
     const course = new Course(req.body.course);
     await course.save();
     res.redirect(`/courses/${course._id}`);
-  } catch (err) {
-    next(err);
-  }
-});
+  })
+);
 
-app.get('/courses/:id', async (req, res) => {
-  const course = await Course.findById(req.params.id);
-  res.render('courses/show', { course });
-});
+app.get(
+  '/courses/:id',
+  CatchAsync(async (req, res) => {
+    const course = await Course.findById(req.params.id);
+    res.render('courses/show', { course });
+  })
+);
 
-app.get('/courses/:id/edit', async (req, res) => {
-  const course = await Course.findById(req.params.id);
-  res.render('courses/edit', { course });
-});
-app.put('/courses/:id', async (req, res) => {
-  // res.send('worked');
-  const { id } = req.params;
-  // Course.findByIdAndUpdate(id, {title: 'ddd', location:'eeeee'})
-  const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
-  res.redirect(`/courses/${course._id}`);
-});
+app.get(
+  '/courses/:id/edit',
+  CatchAsync(async (req, res) => {
+    const course = await Course.findById(req.params.id);
+    res.render('courses/edit', { course });
+  })
+);
+app.put(
+  '/courses/:id',
+  CatchAsync(async (req, res) => {
+    // res.send('worked');
+    const { id } = req.params;
+    // Course.findByIdAndUpdate(id, {title: 'ddd', location:'eeeee'})
+    const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
+    res.redirect(`/courses/${course._id}`);
+  })
+);
 
-app.delete('/courses/:id', async (req, res) => {
-  const { id } = req.params;
-  const course = await Course.findByIdAndDelete(id);
-  res.redirect('/courses');
+app.delete(
+  '/courses/:id',
+  CatchAsync(async (req, res) => {
+    const { id } = req.params;
+    const course = await Course.findByIdAndDelete(id);
+    res.redirect('/courses');
+  })
+);
+
+app.all('*', (req, res, next) => {
+  next(new ExpressError('Page Not Found', 404));
+  // res.send('404 Error');
 });
 
 app.use((err, req, res, next) => {
-  res.send('Error');
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Error Occured';
+  res.status(404).render('error', { err });
+
+  // res.send('Error');
 });
 
+//Seed
 // app.get('/createcourse', async (req, res) => {
 //   const course = new Course({
 //     title: 'VGC',
