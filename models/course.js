@@ -7,6 +7,12 @@ const CourseSchema = new Schema({
   description: String,
   location: String,
   image: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Review',
+    },
+  ],
 });
 
 module.exports = mongoose.model('Course', CourseSchema);
