@@ -2,12 +2,13 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const Course = require('./models/course');
+const Review = require('./models/review');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
-// const Joi = require('joi');
-const { courseSchema } = require('./schemas.js');
+
+const { courseSchema, reviewSchema } = require('./schemas.js');
 
 mongoose.connect('mongodb://localhost:27017/golf-yelp', {
   useNewUrlParser: true,
@@ -30,16 +31,17 @@ app.use(express.urlencoded({ exteded: true }));
 app.use(methodOverride('_method'));
 
 const validateCourse = (req, res, next) => {
-  // const courseSchema = Joi.object({
-  //   course: Joi.object({
-  //     title: Joi.string().required(),
-  //     price: Joi.number().required().min(0),
-  //     location: Joi.string().required(),
-  //     description: Joi.string().required(),
-  //     image: Joi.string().required(),
-  //   }).required(),
-  // });
   const { error } = courseSchema.validate(req.body);
+
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
 
   if (error) {
     const msg = error.details.map((el) => el.message).join(',');
@@ -67,6 +69,7 @@ app.get('/courses/new', (req, res) => {
 app.post(
   '/courses',
   validateCourse,
+  validateReview,
   CatchAsync(async (req, res, next) => {
     // if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
 
@@ -79,7 +82,8 @@ app.post(
 app.get(
   '/courses/:id',
   CatchAsync(async (req, res) => {
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(req.params.id).populate('reviews');
+    // console.log(course);
     res.render('courses/show', { course });
   })
 );
@@ -110,6 +114,32 @@ app.delete(
     const { id } = req.params;
     const course = await Course.findByIdAndDelete(id);
     res.redirect('/courses');
+  })
+);
+
+app.post(
+  '/courses/:id/reviews',
+  CatchAsync(async (req, res) => {
+    const course = await Course.findById(req.params.id);
+    const review = new Review(req.body.review);
+    course.reviews.push(review);
+    await review.save();
+    await course.save();
+    res.redirect(`/courses/${course._id}`);
+    // res.send('whoo hooooo');
+  })
+);
+app.delete(
+  '/courses/:id/reviews/:reviewId',
+  CatchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Course.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/courses/${id}`);
+    // res.send('delete route in process');
+    // const {id} = req.params;
+    // const review = await Course.findByIdAndDelete(id);
+    // res.redirect('/courses/:id')
   })
 );
 

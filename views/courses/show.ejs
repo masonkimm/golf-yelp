@@ -1,7 +1,7 @@
 <% layout('./layouts/boilerplate') %>
 
 <div class="row">
-  <div class="col-6 offset-3">
+  <div class="col-6">
     <div class="card my-4">
       <div class="card-footer">
         <a href="/courses" class="card-link d-flex align-items-end">
@@ -20,9 +20,9 @@
           <a href="#" class="card-link">Website</a>
         </li>
       </ul>
-      <div class="card-body d-flex justify-content-end">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end p-3">
         <a
-          class="btn btn-info d-flex justify-content-end mr-2"
+          class="btn btn-info"
           href="/courses/<%= course._id %>/edit"
           class="card-link"
           >Edit</a
@@ -37,31 +37,65 @@
         </form>
       </div>
     </div>
-    <h3>Leave a Review</h3>
+  </div>
+  <div class="col-6">
+    <div class="review my-4">
+      <h4>Leave a Review</h4>
 
-    <form class="mb-4">
-      <div class="mb-3">
-        <label class="form-label" for="rating" id="rating">Rating</label>
-        <input
-          class="form-range"
-          type="range"
-          min="1"
-          max="5"
-          name="review[rating]"
-        />
+      <form
+        class="mb-4 validated-form"
+        action="/courses/<%=course._id%>/reviews"
+        method="POST"
+        novalidate
+      >
+        <div class="mb-3">
+          <label class="form-label" for="rating" id="rating">Rating</label>
+          <input
+            class="form-range"
+            type="range"
+            min="1"
+            max="5"
+            name="review[rating]"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="body">Review </label>
+          <textarea
+            class="form-control"
+            name="review[body]"
+            id="body"
+            cols="30"
+            rows="3"
+            required
+            placeholder="write review"
+          ></textarea>
+          <div class="invalid-feedback text-end">Cannot be blank</div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button class="btn btn-info">Submit</button>
+        </div>
+      </form>
+      <h4>Reviews</h4>
+      <% for (let review of course.reviews) {%>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">rating: <%= review.rating%></h5>
+
+          <p class="card-text">review: <%= review.body%></p>
+        </div>
+        <div class="d-grid d-flex justify-content-end">
+          <form
+            class="card-link d-inline"
+            action="/courses/<%= course._id %>/reviews/<%=review._id%>?_method=DELETE"
+            method="POST"
+          >
+            <button class="btn btn-danger ml-2">Remove</button>
+          </form>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="body">Review </label>
-        <textarea
-          class="form-control"
-          name="review[body]"
-          id="body"
-          cols="30"
-          rows="5"
-        ></textarea>
-      </div>
-      <button class="btn btn-info float-right">Submit</button>
-    </form>
+      <% }%>
+    </div>
   </div>
 </div>
 
