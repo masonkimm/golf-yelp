@@ -6,6 +6,7 @@ const ejsMate = require('ejs-mate');
 const courses = require('./routes/courses');
 const reviews = require('./routes/reviews');
 const session = require('express-session');
+const flash = require('connect-flash');
 // const Course = require('./models/course');
 // const Review = require('./models/review');
 // const CatchAsync = require('./utils/CatchAsync');
@@ -46,6 +47,14 @@ const sessionConfig = {
   },
 };
 app.use(session(sessionConfig));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+
+  next();
+});
 
 app.use('/courses', courses);
 app.use('/courses/:id/reviews', reviews);

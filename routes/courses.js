@@ -35,6 +35,8 @@ router.post(
 
     const course = new Course(req.body.course);
     await course.save();
+    req.flash('success', 'New Course Successfully Added!');
+
     res.redirect(`/courses/${course._id}`);
   })
 );
