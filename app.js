@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/golf-yelp', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const db = mongoose.connection;
@@ -25,25 +26,22 @@ db.once('open', () => {
 const app = express();
 
 app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
 
+app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 app.use(express.urlencoded({ exteded: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  // res.send('Hello Golf World');
   res.render('home');
 });
-
 app.use('/courses', courses);
 app.use('/courses/:id/reviews', reviews);
-
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page Not Found', 404));
-  // res.send('404 Error');
 });
-
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = 'Error Occured';
