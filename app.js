@@ -5,6 +5,7 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const courses = require('./routes/courses');
 const reviews = require('./routes/reviews');
+const session = require('express-session');
 // const Course = require('./models/course');
 // const Review = require('./models/review');
 // const CatchAsync = require('./utils/CatchAsync');
@@ -34,11 +35,25 @@ app.use(express.urlencoded({ exteded: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionConfig = {
+  secret: 'thisIsASecret',
+  resave: false,
+  saveUninitialized: true,
+  coookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+app.use(session(sessionConfig));
+
+app.use('/courses', courses);
+app.use('/courses/:id/reviews', reviews);
+
 app.get('/', (req, res) => {
   res.render('home');
 });
-app.use('/courses', courses);
-app.use('/courses/:id/reviews', reviews);
+
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page Not Found', 404));
 });
