@@ -7,11 +7,10 @@ const courses = require('./routes/courses');
 const reviews = require('./routes/reviews');
 const session = require('express-session');
 const flash = require('connect-flash');
-// const Course = require('./models/course');
-// const Review = require('./models/review');
-// const CatchAsync = require('./utils/CatchAsync');
-// const ExpressError = require('./utils/ExpressError');
-// const { courseSchema, reviewSchema } = require('./schemas.js');
+const User = require('./models/user');
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 mongoose.connect('mongodb://localhost:27017/golf-yelp', {
   useNewUrlParser: true,
@@ -48,12 +47,26 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
-
   next();
+});
+
+//new user seed
+app.get('/testUser', async (req, res) => {
+  const testUser = new User({
+    email: 'testUserEmail@gmal.com',
+    username: 'testUserrr',
+  });
+  const newUser = await User.register(testUser, 'password');
+  res.send(newUser);
 });
 
 app.use('/courses', courses);
