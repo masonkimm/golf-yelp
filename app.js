@@ -3,8 +3,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const courses = require('./routes/courses');
-const reviews = require('./routes/reviews');
+const courseRoutes = require('./routes/course');
+const reviewRoutes = require('./routes/review');
+const userRoutes = require('./routes/user');
 const session = require('express-session');
 const flash = require('connect-flash');
 const User = require('./models/user');
@@ -69,8 +70,9 @@ app.get('/testUser', async (req, res) => {
   res.send(newUser);
 });
 
-app.use('/courses', courses);
-app.use('/courses/:id/reviews', reviews);
+app.use('/', userRoutes);
+app.use('/courses', courseRoutes);
+app.use('/courses/:id/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
   res.render('home');
