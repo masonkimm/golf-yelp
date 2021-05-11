@@ -26,8 +26,8 @@ router.post(
     course.reviews.push(review);
     await review.save();
     await course.save();
+    req.flash('success', 'New Review Added!');
     res.redirect(`/courses/${course._id}`);
-    // res.send('whoo hooooo');
   })
 );
 router.delete(
@@ -36,6 +36,7 @@ router.delete(
     const { id, reviewId } = req.params;
     await Course.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+    req.flash('success', 'Review Deleted!');
     res.redirect(`/courses/${id}`);
     // res.send('delete route in process');
     // const {id} = req.params;
