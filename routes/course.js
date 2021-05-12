@@ -36,7 +36,6 @@ router.post(
     const course = new Course(req.body.course);
     await course.save();
     req.flash('success', 'New Course Successfully Added!');
-
     res.redirect(`/courses/${course._id}`);
   })
 );
@@ -48,7 +47,7 @@ router.get(
     // console.log(course);
     if (!course) {
       req.flash('error', 'Cannot find that course...');
-      res.redirect('/courses');
+      return res.redirect('/courses');
     }
     res.render('courses/show', { course });
   })
@@ -60,7 +59,7 @@ router.get(
     const course = await Course.findById(req.params.id);
     if (!course) {
       req.flash('error', 'Cannot find that course...');
-      res.redirect('/courses');
+      return res.redirect('/courses');
     }
     res.render('courses/edit', { course });
   })
