@@ -25,7 +25,7 @@ router.get(
 
 router.post(
   '/register',
-  CatchAsync(async (req, res) => {
+  CatchAsync(async (req, res, next) => {
     // res.send(req.body);
 
     try {
@@ -35,9 +35,16 @@ router.post(
 
       const registeredUser = await User.register(user, password);
 
-      console.log(registeredUser);
-      req.flash('success', 'Registration Complete! Welcome to golf yelp!');
-      res.redirect('/courses');
+      // console.log(registeredUser);
+      req.login(registeredUser, (err) => {
+        if (err) return next(err);
+
+        req.flash(
+          'success',
+          `Registration Complete!. Welcome, ${req.user.username}`
+        );
+        res.redirect('/courses');
+      });
     } catch (e) {
       req.flash('error', e.message);
       res.redirect('register');
@@ -46,7 +53,6 @@ router.post(
 );
 
 //login route
-
 router.get('/login', (req, res) => {
   res.render('users/login');
 });
@@ -58,15 +64,15 @@ router.post(
     failureRedirect: '/login',
   }),
   (req, res) => {
-    console.log('REQ.USER...', req.user);
-
+    // console.log('REQ.USER...', req.user);
     req.flash('success', `Logged In. Welcome, ${req.user.username}`);
-    res.redirect('/courses');
+    const redirectUrl = req.session.returnTo || '/courses';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
   }
 );
 
 //logout route
-
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success', 'Logged out, Good Bye.');

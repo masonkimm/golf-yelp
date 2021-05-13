@@ -63,6 +63,7 @@ router.get(
 
 router.get(
   '/:id/edit',
+  isLoggedIn,
   CatchAsync(async (req, res) => {
     const course = await Course.findById(req.params.id);
     if (!course) {
