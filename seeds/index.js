@@ -21,13 +21,12 @@ const sample = (array) => {
 
 const seedDB = async () => {
   await Course.deleteMany({});
-  // const c = new Course({ title: 'Pebble Beach' });
-  // await c.save();
 
   for (let i = 0; i < 50; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
     const course = new Course({
+      author: '609d6d2d69f3a809e4816a30',
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       image: 'https://source.unsplash.com/collection/10734239/1200x600',
