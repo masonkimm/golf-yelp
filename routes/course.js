@@ -4,6 +4,8 @@ const Course = require('../models/course');
 const CatchAsync = require('../utils/CatchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { courseSchema } = require('../schemas.js');
+const passport = require('passport');
+const { isLoggedIn } = require('../middleware');
 
 const validateCourse = (req, res, next) => {
   const { error } = courseSchema.validate(req.body);
@@ -23,12 +25,18 @@ router.get(
     res.render('courses/index', { courses });
   })
 );
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
+  // if (!req.isAuthenticated()) {
+  //   req.flash('error', 'Must sign in');
+  //   return res.redirect('/login');
+  // }
+
   res.render('courses/new');
 });
 
 router.post(
   '/',
+  isLoggedIn,
   validateCourse,
   CatchAsync(async (req, res, next) => {
     // if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
@@ -81,6 +89,7 @@ router.put(
 
 router.delete(
   '/:id',
+  isLoggedIn,
   CatchAsync(async (req, res) => {
     const { id } = req.params;
     const course = await Course.findByIdAndDelete(id);
