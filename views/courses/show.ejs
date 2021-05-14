@@ -67,6 +67,8 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="body">Review </label>
+          <% if(currentUser){%>
+
           <textarea
             class="form-control"
             name="review[body]"
@@ -74,24 +76,43 @@
             cols="30"
             rows="3"
             required
-            placeholder="write review"
+            placeholder="Write a review"
           ></textarea>
+          <% } else {%>
+          <textarea
+            class="form-control"
+            name="review[body]"
+            id="body"
+            cols="30"
+            rows="3"
+            required
+            placeholder="Please log in to write a review."
+          ></textarea>
+          <% } %>
+
           <div class="invalid-feedback text-end">Cannot be blank</div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <!-- <button class="btn btn-info">Submit</button> -->
+
+          <% if(currentUser){%>
           <button class="btn btn-info">Submit</button>
+          <% } %>
         </div>
       </form>
+
       <h4>Reviews</h4>
       <% for (let review of course.reviews) {%>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">rating: <%= review.rating%></h5>
-
+          <h5 class="card-title">author: <%= review.author.username%></h5>
+          <p class="card-title">rating: <%= review.rating%></p>
           <p class="card-text">review: <%= review.body%></p>
         </div>
 
         <div class="d-grid d-flex justify-content-end">
+          <% if( currentUser && review.author.equals(currentUser._id)) {%>
+
           <form
             class="card-link d-inline"
             action="/courses/<%= course._id %>/reviews/<%=review._id%>?_method=DELETE"
@@ -99,6 +120,7 @@
           >
             <button class="btn btn-danger m-2">Remove</button>
           </form>
+          <% } %>
         </div>
       </div>
       <% }%>

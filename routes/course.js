@@ -26,7 +26,6 @@ router.post(
   validateCourse,
   CatchAsync(async (req, res, next) => {
     // if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
-
     const course = new Course(req.body.course);
     course.author = req.user._id;
     await course.save();
@@ -39,7 +38,12 @@ router.get(
   '/:id',
   CatchAsync(async (req, res) => {
     const course = await await Course.findById(req.params.id)
-      .populate('reviews')
+      .populate({
+        path: 'reviews',
+        populate: {
+          path: 'author',
+        },
+      })
       .populate('author');
     console.log(course);
     // console.log(course);

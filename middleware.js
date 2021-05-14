@@ -3,8 +3,8 @@ const Review = require('./models/review');
 const { courseSchema, reviewSchema } = require('./schemas.js');
 const ExpressError = require('./utils/ExpressError');
 
+//user check
 module.exports.isLoggedIn = (req, res, next) => {
-  // console.log('REQ.USER...', req.user);
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
     req.flash('error', 'Must log in first');
@@ -12,18 +12,7 @@ module.exports.isLoggedIn = (req, res, next) => {
   }
   next();
 };
-
-module.exports.isAuthor = async (req, res, next) => {
-  const { id } = req.params;
-  const course = await Course.findById(id);
-
-  if (!course.author.equals(req.user._id)) {
-    req.flash('error', 'Permission required');
-    return res.redirect(`/courses/${id}`);
-  }
-  next();
-};
-
+//course validation
 module.exports.validateCourse = (req, res, next) => {
   const { error } = courseSchema.validate(req.body);
 
@@ -34,7 +23,31 @@ module.exports.validateCourse = (req, res, next) => {
     next();
   }
 };
+//course author check
+module.exports.isAuthor = async (req, res, next) => {
+  const { id } = req.params;
+  const course = await Course.findById(id);
 
+  if (!course.author.equals(req.user._id)) {
+    req.flash('error', 'Permission required');
+    return res.redirect(`/courses/${id}`);
+  }
+  next();
+};
+//review author check
+module.exports.isReviewAuthor = async (req, res, next) => {
+  // app.delete('/:reviewId')
+  const { id, reviewId } = req.params;
+  const review = await Review.findById(reviewId);
+
+  if (!review.author.equals(req.user._id)) {
+    req.flash('error', 'Permission required');
+    return res.redirect(`/courses/${id}`);
+  }
+  next();
+};
+
+//review validation
 module.exports.validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
 
