@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require('../models/user');
 const CatchAsync = require('../utils/CatchAsync');
 const ExpressError = require('../utils/ExpressError');
+const users = require('../controllers/users');
 
 const validateCourse = (req, res, next) => {
   const { error } = courseSchema.validate(req.body);
@@ -16,46 +17,12 @@ const validateCourse = (req, res, next) => {
   }
 };
 
-router.get(
-  '/register',
-  CatchAsync(async (req, res) => {
-    res.render('users/register');
-  })
-);
+router.get('/register', CatchAsync(users.newUserForm));
 
-router.post(
-  '/register',
-  CatchAsync(async (req, res, next) => {
-    // res.send(req.body);
-
-    try {
-      const { email, username, password } = req.body;
-
-      const user = new User({ email, username });
-
-      const registeredUser = await User.register(user, password);
-
-      // console.log(registeredUser);
-      req.login(registeredUser, (err) => {
-        if (err) return next(err);
-
-        req.flash(
-          'success',
-          `Registration Complete!. Welcome, ${req.user.username}`
-        );
-        res.redirect('/courses');
-      });
-    } catch (e) {
-      req.flash('error', e.message);
-      res.redirect('register');
-    }
-  })
-);
+router.post('/register', CatchAsync(users.postNewUser));
 
 //login route
-router.get('/login', (req, res) => {
-  res.render('users/login');
-});
+router.get('/login', users.renderLoginForm);
 
 router.post(
   '/login',
@@ -63,20 +30,10 @@ router.post(
     failureFlash: true,
     failureRedirect: '/login',
   }),
-  (req, res) => {
-    // console.log('REQ.USER...', req.user);
-    req.flash('success', `Logged In. Welcome, ${req.user.username}`);
-    const redirectUrl = req.session.returnTo || '/courses';
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
-  }
+  users.login
 );
 
 //logout route
-router.get('/logout', (req, res) => {
-  req.logout();
-  req.flash('success', 'Logged out, Good Bye.');
-  res.redirect('/courses');
-});
+router.get('/logout', users.logout);
 
 module.exports = router;

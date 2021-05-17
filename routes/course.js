@@ -35,4 +35,5 @@ router.put(
 
 //delete route
 router.delete('/:id', isLoggedIn, isAuthor, CatchAsync(courses.removeCourse));
+
 module.exports = router;
