@@ -20,7 +20,7 @@ module.exports.postNewUser = async (req, res, next) => {
 
       req.flash(
         'success',
-        `Registration Complete!. Welcome, ${req.user.username}`
+        `Registration Complete! Welcome, ${req.user.username}`
       );
       res.redirect('/courses');
     });

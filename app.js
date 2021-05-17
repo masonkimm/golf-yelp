@@ -90,6 +90,9 @@ app.use((err, req, res, next) => {
   if (!err.message) err.message = 'Error Occured';
   res.status(404).render('error', { err });
 });
+app.listen(3000, () => {
+  console.log('Live on port 3000');
+});
 
 //Seed
 // app.get('/createcourse', async (req, res) => {
@@ -100,7 +103,3 @@ app.use((err, req, res, next) => {
 //   await course.save();
 // res.send(course);
 // });
-
-app.listen(3000, () => {
-  console.log('Live on port 3000');
-});

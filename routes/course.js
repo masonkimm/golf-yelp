@@ -2,20 +2,35 @@ const express = require('express');
 const router = express.Router();
 const Course = require('../models/course');
 const CatchAsync = require('../utils/CatchAsync');
-// const ExpressError = require('../utils/ExpressError');
-// const { courseSchema } = require('../schemas.js');
 const passport = require('passport');
 const { isLoggedIn, validateCourse, isAuthor } = require('../middleware');
 const courses = require('../controllers/courses');
 
-//show all courses route
-router.get('/', CatchAsync(courses.index));
+//index routes
+router
+  .route('/')
+  //show all courses route
+  .get(CatchAsync(courses.index))
+  //posting new course route
+  .post(isLoggedIn, validateCourse, CatchAsync(courses.postNewCourse));
+
 //create new course route
 router.get('/new', isLoggedIn, courses.renderNewForm);
-//posting new course route
-router.post('/', isLoggedIn, validateCourse, CatchAsync(courses.postNewCourse));
-//show selected course route
-router.get('/:id', CatchAsync(courses.showSelectedCourse));
+
+//id routes
+router
+  .route('/:id')
+  //show selected course route
+  .get(CatchAsync(courses.showSelectedCourse))
+  //posting updated route
+  .put(
+    validateCourse,
+    isLoggedIn,
+    isAuthor,
+    CatchAsync(courses.postEditedCourse)
+  )
+  //delete route
+  .delete(isLoggedIn, isAuthor, CatchAsync(courses.removeCourse));
 
 //update page route
 router.get(
@@ -24,16 +39,33 @@ router.get(
   isAuthor,
   CatchAsync(courses.renderEditForm)
 );
-//posting updated route
-router.put(
-  '/:id',
-  validateCourse,
-  isLoggedIn,
-  isAuthor,
-  CatchAsync(courses.postEditedCourse)
-);
-
-//delete route
-router.delete('/:id', isLoggedIn, isAuthor, CatchAsync(courses.removeCourse));
 
 module.exports = router;
+
+//#forReference
+//====before refactoring===
+//show all courses route
+// router.get('/', CatchAsync(courses.index));
+//create new course route
+// router.get('/new', isLoggedIn, courses.renderNewForm);
+//posting new course route
+// router.post('/', isLoggedIn, validateCourse, CatchAsync(courses.postNewCourse));
+//show selected course route
+// router.get('/:id', CatchAsync(courses.showSelectedCourse));
+//update page route
+// router.get(
+//   '/:id/edit',
+//   isLoggedIn,
+//   isAuthor,
+//   CatchAsync(courses.renderEditForm)
+// );
+//posting updated route
+// router.put(
+//   '/:id',
+//   validateCourse,
+//   isLoggedIn,
+//   isAuthor,
+//   CatchAsync(courses.postEditedCourse)
+// );
+//delete route
+// router.delete('/:id', isLoggedIn, isAuthor, CatchAsync(courses.removeCourse));

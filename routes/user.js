@@ -17,13 +17,32 @@ const validateCourse = (req, res, next) => {
   }
 };
 
-router.get('/register', CatchAsync(users.newUserForm));
+router
+  .route('/register')
+  //render and post new user form
+  .get(CatchAsync(users.newUserForm))
+  .post(CatchAsync(users.postNewUser));
 
-router.post('/register', CatchAsync(users.postNewUser));
+router
+  .route('/login')
+  //render and post login form
+  .get(users.renderLoginForm)
+  .post(
+    passport.authenticate('local', {
+      failureFlash: true,
+      failureRedirect: '/login',
+    }),
+    users.login
+  );
 
-//login route
+//logout route
+router.get('/logout', users.logout);
+
+module.exports = router;
+
+// #forReference
+/*
 router.get('/login', users.renderLoginForm);
-
 router.post(
   '/login',
   passport.authenticate('local', {
@@ -32,8 +51,7 @@ router.post(
   }),
   users.login
 );
-
-//logout route
 router.get('/logout', users.logout);
-
-module.exports = router;
+router.get('/register', CatchAsync(users.newUserForm));
+router.post('/register', CatchAsync(users.postNewUser));
+*/
