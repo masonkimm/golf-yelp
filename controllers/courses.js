@@ -11,9 +11,15 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.postNewCourse = async (req, res, next) => {
   // if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
+
   const course = new Course(req.body.course);
+  course.images = req.files.map((file) => ({
+    url: file.path,
+    filename: file.filename,
+  }));
   course.author = req.user._id;
   await course.save();
+  console.log(course);
   req.flash('success', 'New Course Successfully Added!');
   res.redirect(`/courses/${course._id}`);
 };

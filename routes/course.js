@@ -6,13 +6,29 @@ const passport = require('passport');
 const { isLoggedIn, validateCourse, isAuthor } = require('../middleware');
 const courses = require('../controllers/courses');
 
+const multer = require('multer');
+
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
+
 //index routes
 router
   .route('/')
   //show all courses route
   .get(CatchAsync(courses.index))
   //posting new course route
-  .post(isLoggedIn, validateCourse, CatchAsync(courses.postNewCourse));
+  .post(
+    isLoggedIn,
+    upload.array('image'),
+    validateCourse,
+    CatchAsync(courses.postNewCourse)
+  );
+
+//forTesting***
+// .post(upload.array('image'), (req, res) => {
+//   console.log(req.body, req.files);
+//   res.send('itworked');
+// });
 
 //create new course route
 router.get('/new', isLoggedIn, courses.renderNewForm);
