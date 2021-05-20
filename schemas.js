@@ -8,6 +8,7 @@ module.exports.courseSchema = Joi.object({
     description: Joi.string().required(),
     //   image: Joi.string().required(),
   }).required(),
+  deleteImages: Joi.array(),
 });
 
 module.exports.reviewSchema = Joi.object({

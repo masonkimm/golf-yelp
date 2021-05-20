@@ -24,12 +24,6 @@ router
     CatchAsync(courses.postNewCourse)
   );
 
-//forTesting***
-// .post(upload.array('image'), (req, res) => {
-//   console.log(req.body, req.files);
-//   res.send('itworked');
-// });
-
 //create new course route
 router.get('/new', isLoggedIn, courses.renderNewForm);
 
@@ -40,9 +34,10 @@ router
   .get(CatchAsync(courses.showSelectedCourse))
   //posting updated route
   .put(
-    validateCourse,
     isLoggedIn,
     isAuthor,
+    upload.array('image'),
+    validateCourse,
     CatchAsync(courses.postEditedCourse)
   )
   //delete route
@@ -57,6 +52,12 @@ router.get(
 );
 
 module.exports = router;
+
+//#forTesting
+// .post(upload.array('image'), (req, res) => {
+//   console.log(req.body, req.files);
+//   res.send('itworked');
+// });
 
 //#forReference
 //====before refactoring===

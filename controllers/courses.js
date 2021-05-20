@@ -1,4 +1,5 @@
 const Course = require('../models/course');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
   const courses = await Course.find({});
@@ -33,7 +34,7 @@ module.exports.showSelectedCourse = async (req, res) => {
       },
     })
     .populate('author');
-  console.log(course);
+  // console.log(course);
   // console.log(course);
   if (!course) {
     req.flash('error', 'Cannot find that course...');
@@ -54,7 +55,25 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.postEditedCourse = async (req, res) => {
   const { id } = req.params;
+  console.log(req.body);
   const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
+  const imgs = req.files.map((file) => ({
+    url: file.path,
+    filename: file.filename,
+  }));
+  course.images.push(...imgs);
+  await course.save();
+
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    }
+    await course.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    });
+    console.log(course);
+  }
+
   req.flash('success', 'Course Edited Successfully!');
   res.redirect(`/courses/${course._id}`);
 };

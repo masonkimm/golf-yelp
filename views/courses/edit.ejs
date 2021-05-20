@@ -8,6 +8,7 @@
       method="POST"
       class="validated-form"
       novalidate
+      enctype="multipart/form-data"
     >
       <div class="mb-3">
         <label class="form-label" for="title">Title </label>
@@ -34,15 +35,16 @@
         <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
       <div class="mb-3">
-        <label class="form-label" for="image">Image</label>
-        <input
+        <label class="form-label" for="image"> Add Images</label>
+        <input class="form-control" type="file" name="image" id="" multiple />
+        <!-- <input
           class="form-control"
           type="text"
           id="image"
           name="course[image]"
           value="<%= course.image%>"
           required
-        />
+        /> -->
         <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
       <div class="mb-3">
@@ -76,6 +78,22 @@
 <%=course.description%></textarea
         >
         <div class="invalid-feedback text-end">Please fill in the blank</div>
+      </div>
+      <div class="mb-3">
+        <% course.images.forEach(function (img, i) {%>
+
+        <img src="<%=img.url%>" class="d-block w-100 img-thumbnail" alt="..." />
+        <div class="form-check-inline">
+          <input
+            type="checkbox"
+            name="deleteImages[]"
+            id="image-<%=i%>"
+            value="<%=img.filename%>"
+          />
+        </div>
+        <label for="image-<%=i%>">Remove Image</label>
+
+        <% }) %>
       </div>
 
       <div class="text-end">
