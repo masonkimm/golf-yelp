@@ -1,5 +1,9 @@
 const Course = require('../models/course');
 const { cloudinary } = require('../cloudinary');
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const geocoder = mbxGeocoding({ accessToken: MAPBOX_TOKEN });
 
 module.exports.index = async (req, res) => {
   const courses = await Course.find({});
@@ -12,8 +16,20 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.postNewCourse = async (req, res, next) => {
   // if (!req.body.course) throw new ExpressError('Invalid Course Data', 400);
+  const geoData = await geocoder
+    .forwardGeocode({
+      query: req.body.course.location,
+      limit: 1,
+    })
+    .send();
+
+  // console.log(geoData.body.features[0].geometry.coordinates);
+  // res.send(geoData.body.features[0].geometry.coordinates);
 
   const course = new Course(req.body.course);
+
+  course.geometry = geoData.body.features[0].geometry;
+
   course.images = req.files.map((file) => ({
     url: file.path,
     filename: file.filename,
@@ -34,7 +50,7 @@ module.exports.showSelectedCourse = async (req, res) => {
       },
     })
     .populate('author');
-  // console.log(course);
+
   // console.log(course);
   if (!course) {
     req.flash('error', 'Cannot find that course...');
@@ -55,7 +71,7 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.postEditedCourse = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
+  // console.log(req.body);
   const course = await Course.findByIdAndUpdate(id, { ...req.body.course });
   const imgs = req.files.map((file) => ({
     url: file.path,
@@ -71,7 +87,7 @@ module.exports.postEditedCourse = async (req, res) => {
     await course.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
-    console.log(course);
+    // console.log(course);
   }
 
   req.flash('success', 'Course Edited Successfully!');
