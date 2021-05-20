@@ -2,14 +2,15 @@
 
 <div class="row my-5">
   <h1 class="text-center">Edit course</h1>
-  <div class="col-6 offset-3">
-    <form
-      action="/courses/<%=course._id%>?_method=PUT"
-      method="POST"
-      class="validated-form"
-      novalidate
-      enctype="multipart/form-data"
-    >
+
+  <form
+    action="/courses/<%=course._id%>?_method=PUT"
+    method="POST"
+    class="validated-form d-flex"
+    novalidate
+    enctype="multipart/form-data"
+  >
+    <div class="col-6">
       <div class="mb-3">
         <label class="form-label" for="title">Title </label>
         <input
@@ -79,10 +80,20 @@
         >
         <div class="invalid-feedback text-end">Please fill in the blank</div>
       </div>
-      <div class="mb-3">
+      <div class="text-end">
+        <button class="btn btn-info">Update</button>
+        <a class="btn btn-danger" href="/courses/<%= course._id%>">Cancel</a>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-wrap">
         <% course.images.forEach(function (img, i) {%>
-
-        <img src="<%=img.url%>" class="d-block w-100 img-thumbnail" alt="..." />
+        <img
+          src="<%=img.thumbnail%>"
+          class="img-thumbnail"
+          style="margin-bottom: 20px"
+          alt="..."
+        />
         <div class="form-check-inline">
           <input
             type="checkbox"
@@ -91,17 +102,11 @@
             value="<%=img.filename%>"
           />
         </div>
-        <label for="image-<%=i%>">Remove Image</label>
-
+        <label for="image-<%=i%>" style="margin-right: 10px">Remove</label>
         <% }) %>
       </div>
-
-      <div class="text-end">
-        <button class="btn btn-info">Update Course</button>
-        <a class="btn btn-danger" href="/courses/<%= course._id%>">Cancel</a>
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
 <!-- 
 <h1>Edit Course</h1>
