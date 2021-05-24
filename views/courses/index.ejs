@@ -1,6 +1,7 @@
 <% layout('./layouts/boilerplate') %>
 <!-- <button><a href="/courses/new">Add new Course</a></button> -->
 <h1>Main Page</h1>
+<div id="map" style="width: 100%; height: 500px"></div>
 
 <% for (let course of courses) {%>
 <div class="card mb-3">
@@ -14,7 +15,7 @@
       />
       <% } else {%>
       <img
-        src="https://res.cloudinary.com/masonk/image/upload/v1621472799/GolfCamp/ybuhfa6kalvz5beiytdt.jpg"
+        src="https://images.unsplash.com/photo-1592919505780-303950717480?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
         alt="card-image"
         class="img-fluid"
       />
@@ -23,6 +24,7 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title"><%=course.title%></h5>
+        <!-- <h5 class="card-title"><%=course.properties.popUpMarkup%></h5> -->
         <p class="card-text"><%=course.description%></p>
         <p class="card-text text-muted"><%=course.location%></p>
         <a href="/courses/<%=course._id%>" class="btn btn-info">View</a>
@@ -32,3 +34,9 @@
 </div>
 <!-- <li><a href="/courses/<%= course._id%>"> <%= course.title %></a></li> -->
 <% }%>
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const courses = {features:<%-JSON.stringify(courses)%>}
+</script>
+<script src="/js/clusterMap.js"></script>

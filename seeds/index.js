@@ -22,7 +22,7 @@ const sample = (array) => {
 const seedDB = async () => {
   await Course.deleteMany({});
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 300; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
     const course = new Course({
@@ -31,12 +31,12 @@ const seedDB = async () => {
       title: `${sample(descriptors)} ${sample(places)}`,
       images: [
         {
-          url: 'https://res.cloudinary.com/masonk/image/upload/v1621446310/GolfCamp/jbfiezlw0xxzzgaanrn8.jpg',
-          filename: 'GolfCamp/jbfiezlw0xxzzgaanrn8',
+          url: 'https://res.cloudinary.com/masonk/image/upload/v1621447246/GolfCamp/z9vcstoxolvzz6u6zqwi.jpg',
+          filename: 'GolfCamp/z9vcstoxolvzz6u6zqwi',
         },
         {
-          url: 'https://res.cloudinary.com/masonk/image/upload/v1621446309/GolfCamp/dwytkda8ellqym81eolv.jpg',
-          filename: 'GolfCamp/dwytkda8ellqym81eolv',
+          url: 'https://res.cloudinary.com/masonk/image/upload/v1621447246/GolfCamp/qu5wcmbz0amoiybh89ro.jpg',
+          filename: 'GolfCamp/qu5wcmbz0amoiybh89ro',
         },
       ],
       description:
@@ -44,7 +44,10 @@ const seedDB = async () => {
       price: price,
       geometry: {
         type: 'Point',
-        coordinates: [-113.1331, 47.0202],
+        coordinates: [
+          cities[random1000].longitude,
+          cities[random1000].latitude,
+        ],
       },
     });
     await course.save();
