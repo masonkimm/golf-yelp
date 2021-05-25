@@ -7,6 +7,7 @@ var map = new mapboxgl.Map({
   center: course.geometry.coordinates, // starting position [lng, lat]
   zoom: 11, // starting zoom
 });
+map.addControl(new mapboxgl.NavigationControl());
 
 new mapboxgl.Marker()
   .setLngLat(course.geometry.coordinates)
