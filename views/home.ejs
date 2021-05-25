@@ -4,10 +4,61 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Golf Camp</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/home.css" />
+    <title>Golf-Yelp</title>
   </head>
-  <body>
-    <h1>Hello Golf World, Welcome!</h1>
-    <button><a href="/courses">View Courses</a></button>
+  <body class="d-flex text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div class="d-flex justify-content-between">
+          <h3 class="float-md-left mb-0">Golf Yelp</h3>
+          <nav class="nav">
+            <a href="#" aria-current="page" class="nav-link active">Home</a>
+            <a href="/courses" class="nav-link">Courses</a>
+            <% if (!currentUser){ %>
+
+            <a href="/register" class="nav-link">Register</a>
+            <a href="/login" class="nav-link">Login</a>
+            <% } else {%>
+            <a href="/logout" class="nav-link">Logout</a>
+            <% } %>
+          </nav>
+        </div>
+      </header>
+      <main class="mt-5 px-3">
+        <p>welcome to</p>
+        <h1>Golf Yelp</h1>
+        <p class="lead text-center">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab expedita
+          commodi nesciunt amet! Alias nobis ipsa amet, obcaecati rem labore
+          deleniti hic quae illum suscipit doloribus assumenda, unde voluptates
+          sapiente?
+        </p>
+        <a href="/courses" class="btn text-white" id="viewCourseBtn"
+          >View Courses</a
+        >
+      </main>
+      <footer class="mt-auto text-white-50">&copy; 2020 MK</footer>
+    </div>
+
+    <!-- <h1>Hello Golf World, Welcome!</h1>
+    <button><a href="/courses">View Courses</a></button> -->
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+      integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+      integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
