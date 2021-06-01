@@ -30,7 +30,7 @@ const helmet = require('helmet');
 // const { Store } = require('express-session');
 
 // const DB_URL = process.env.DB_URL;
-const DB_URL = 'mongodb://localhost:27017/golf-yelp';
+const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017/golf-yelp';
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
@@ -55,10 +55,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const secret = process.env.SECRET || 'secretLine';
 const store = MongoStore.create({
   mongoUrl: DB_URL,
   crypto: {
-    secret: 'thisIsASecret',
+    secret: secret,
   },
   touchAfter: 24 * 60 * 60,
 });
@@ -68,7 +69,7 @@ store.on('error', function (e) {
 const sessionConfig = {
   store: store,
   name: 'session',
-  secret: 'thisIsASecret',
+  secret: secret,
   resave: false,
   saveUninitialized: true,
   coookie: {
